@@ -60,8 +60,10 @@
    */
    initEvents() {
         this.$calculatorDOMElement.find(".display-number").on('click', (event) => {
+            console.log('initEvents()start');
             const parentLabel = $(event.target).parent(".display-number");
             this.changeNumber(parentLabel);
+            console.log('initEvents()end');
         })
    }
 }
