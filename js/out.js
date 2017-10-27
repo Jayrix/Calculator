@@ -339,14 +339,16 @@ var DecCalculator = function (_Calculator) {
         key: 'changeNumber',
         value: function changeNumber(root) {
             var activeElement = root.find('.active');
-            activeElement.attr('contenteditable', 'true');
-            activeElement.text('');
-            activeElement.trigger('focus');
-            activeElement.on('DOMSubtreeModified', function (e) {
-                //console.log('x');
-                var $e = $(e.target);
-                if ($e.text().length > 1) {
-                    $e.text($e.text()[1]).select();
+            activeElement.attr('contenteditable', 'true').text('').trigger('focus');
+            activeElement.on('blur', function (e) {
+                if (e.target.textContent === '') {
+                    e.target.textContent = 0;
+                }
+            });
+            activeElement.on('keydown', function (e) {
+                e.preventDefault();
+                if (e.which >= 48 && e.which <= 57) {
+                    e.target.textContent = Number(String.fromCharCode(e.which));
                 }
             });
             console.log('changeNumber()');
@@ -394,7 +396,7 @@ var DecCalculator = function (_Calculator) {
     }, {
         key: 'updateResult',
         value: function updateResult() {
-            var resultSpans = this.$calculatorDOMElement.find('.result-bit');
+            var resultSpans = this.$calculatorDOMElement.find('.result-bit').find('span');
             console.log(resultSpans);
             for (var i = this.resultNumberArray.length - 1, j = 0; i >= 0, j < resultSpans.length; i--, j++) {
                 resultSpans.eq(j).text(this.resultNumberArray[i]);

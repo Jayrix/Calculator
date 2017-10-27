@@ -7,15 +7,16 @@ class DecCalculator extends Calculator {
     }
     changeNumber(root){
         let activeElement = root.find('.active');
-        activeElement.attr('contenteditable', 'true');
-        activeElement.text('');
-        activeElement.trigger('focus');
-        activeElement.on('DOMSubtreeModified', e => {
-            //console.log('x');
-            let $e = $(e.target);
-            if($e.text().length > 1){
-                $e.text($e.text()[1]).select();
-
+        activeElement.attr('contenteditable', 'true').text('').trigger('focus');
+        activeElement.on('blur', e => {
+            if(e.target.textContent === ''){
+                e.target.textContent = 0;
+            }
+        });
+        activeElement.on('keydown', e => {
+            e.preventDefault();
+            if(e.which >= 48 && e.which <= 57 ){
+                e.target.textContent = Number(String.fromCharCode(e.which));
             }
         });
         console.log('changeNumber()');
@@ -53,7 +54,7 @@ class DecCalculator extends Calculator {
     }
 
     updateResult(){
-        let resultSpans = this.$calculatorDOMElement.find('.result-bit');
+        let resultSpans = this.$calculatorDOMElement.find('.result-bit').find('span');
         console.log(resultSpans);
         for (let i = this.resultNumberArray.length -1 , j = 0; i >= 0, j < resultSpans.length ; i--, j++){
             resultSpans.eq(j).text(this.resultNumberArray[i]);
